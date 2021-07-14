@@ -85,7 +85,8 @@ public class IntList {
             A.rest = B;
             return A;
         }
-        return A = new IntList(A.first, dcatenate(A.rest, B));
+        A.rest = dcatenate(A.rest, B);
+        return A;
     }
 
     /**
