@@ -1,6 +1,5 @@
 public class LinkedListDeque<T> {
     private int size;
-    private ListNode deque;
     private ListNode sentinel = new ListNode(null, null, null);
 
     public class ListNode {
@@ -15,7 +14,6 @@ public class LinkedListDeque<T> {
     }
 
     public LinkedListDeque(T x) {
-        deque = sentinel;
         ListNode first = new ListNode(x, sentinel, sentinel);
         size = 1;
         sentinel.next = first;
@@ -23,7 +21,6 @@ public class LinkedListDeque<T> {
     }
 
     public LinkedListDeque() {
-        deque = sentinel;
         size = 0;
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
