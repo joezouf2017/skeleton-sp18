@@ -4,10 +4,10 @@ public class LinkedListDeque<T> {
     private ListNode sentinel = new ListNode(null, null, null);
 
     public class ListNode {
-        public T item;
-        public ListNode next;
-        public ListNode prev;
-        public ListNode (T i, ListNode p,ListNode n) {
+        private T item;
+        private ListNode next;
+        private ListNode prev;
+        public ListNode(T i, ListNode p, ListNode n) {
             item = i;
             next = n;
             prev = p;
