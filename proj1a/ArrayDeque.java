@@ -23,7 +23,10 @@ public class ArrayDeque<T> {
         if (isEmpty() || index >= size) {
             return null;
         }
-        return items[index];
+        if (items[front] == null) {
+            return items[front + 1 + index % items.length];
+        }
+        return items[front + index % items.length];
     }
 
     public void addFirst(T item) {
