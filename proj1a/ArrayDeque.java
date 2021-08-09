@@ -27,27 +27,27 @@ public class ArrayDeque<T> {
     }
 
     public void addFirst(T item) {
+        if (end + 1 % items.length == front) {
+            resize(items.length * 2);
+        }
         front--;
         if (front == -1) {
             front = items.length - 1;
         }
         items[front] = item;
         size++;
-        if (front == end) {
-            resize(items.length * 2);
-        }
     }
 
     public void addLast(T item) {
+        if (end + 1 % items.length == front) {
+            resize(items.length * 2);
+        }
         items[end] = item;
         end++;
         if (end == items.length) {
             end = 0;
         }
         size++;
-        if (end == front) {
-            resize(items.length * 2);
-        }
     }
 
     public T removeFirst() {
