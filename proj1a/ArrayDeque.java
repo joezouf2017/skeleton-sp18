@@ -94,6 +94,9 @@ public class ArrayDeque<T> {
     }
 
     private void resize(int length) {
+        if (items[front] == null) {
+            front = front + 1 % items.length;
+        }
         T[] newitems = (T[]) new Object[length];
         int index = 0;
         for (int i = front; i != end; i = (i + 1) % items.length) {
