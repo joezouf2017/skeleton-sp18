@@ -54,13 +54,10 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        if (isEmpty()) {
+        if (isEmpty() || items[front] == null) {
             return null;
         }
-        T first = (T) items[front];
-        if (first == null) {
-            return null;
-        }
+        T first = items[front];
         items[front] = null;
         size--;
         front++;
@@ -81,10 +78,10 @@ public class ArrayDeque<T> {
         if (end == -1) {
             end = items.length - 1;
         }
-        T last = (T) items[end];
-        if (last == null) {
+        if (items[end] == null) {
             return null;
         }
+        T last = items[end];
         items[end] = null;
         size--;
         if (isShrink()) {
