@@ -24,13 +24,13 @@ public class ArrayDeque<T> {
             return null;
         }
         if (items[front] == null) {
-            return items[front + 1 + index % items.length];
+            return items[(front + 1 + index) % items.length];
         }
-        return items[front + index % items.length];
+        return items[(front + index) % items.length];
     }
 
     public void addFirst(T item) {
-        if (end + 1 % items.length == front) {
+        if ((end + 1) % items.length == front) {
             resize(items.length * 2);
         }
         front--;
@@ -42,7 +42,7 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T item) {
-        if (end + 1 % items.length == front) {
+        if ((end + 1) % items.length == front) {
             resize(items.length * 2);
         }
         items[end] = item;
