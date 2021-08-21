@@ -24,10 +24,12 @@ public class TestArrayDequeGold {
                 Integer sad1 = d1.removeFirst();
                 Integer sad2 = d2.removeFirst();
                 assertEquals(message + "removeFirst()", sad2, sad1);
+                message += "removeFirst()\n";
             } else {
                 Integer sad1 = d1.removeLast();
                 Integer sad2 = d2.removeLast();
                 assertEquals(message + "removeLast()", sad2, sad1);
+                message += "removeLast()\n";
             }
         }
     }
