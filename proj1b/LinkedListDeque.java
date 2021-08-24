@@ -1,0 +1,109 @@
+public class LinkedListDeque<T> implements Deque<T> {
+    private int size;
+    private ListNode sentinel = new ListNode(null, null, null);
+
+    private class ListNode {
+        private T item;
+        private ListNode next;
+        private ListNode prev;
+        public ListNode(T i, ListNode p, ListNode n) {
+            item = i;
+            next = n;
+            prev = p;
+        }
+    }
+
+    public LinkedListDeque() {
+        size = 0;
+        sentinel.next = sentinel;
+        sentinel.prev = sentinel;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return sentinel.next == sentinel;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public void addFirst(T item) {
+        sentinel.next = new ListNode(item, sentinel, sentinel.next);
+        sentinel.next.next.prev = sentinel.next;
+        size++;
+    }
+
+    @Override
+    public void addLast(T item) {
+        sentinel.prev = new ListNode(item, sentinel.prev, sentinel);
+        sentinel.prev.prev.next = sentinel.prev;
+        size++;
+    }
+
+    @Override
+    public T removeFirst() {
+        if (isEmpty()) {
+            return null;
+        }
+        T first = sentinel.next.item;
+        sentinel.next.next.prev = sentinel;
+        sentinel.next = sentinel.next.next;
+        size--;
+        return first;
+    }
+
+    @Override
+    public T removeLast() {
+        if (isEmpty()) {
+            return null;
+        }
+        T last = sentinel.prev.item;
+        sentinel.prev.prev.next = sentinel;
+        sentinel.prev = sentinel.prev.prev;
+        size--;
+        return last;
+    }
+
+    @Override
+    public T get(int index) {
+        if (isEmpty() || index >= size) {
+            return null;
+        }
+        ListNode temp = sentinel.next;
+        while (index > 0) {
+            temp = temp.next;
+            index--;
+        }
+        return temp.item;
+    }
+
+    public T getRecursive(int index) {
+        if (isEmpty() || index >= size) {
+            return null;
+        }
+        ListNode temp = sentinel.next;
+        if (index == 0) {
+            return temp.item;
+        }
+        return getRecursivehelper(index - 1, temp.next);
+    }
+
+    private T getRecursivehelper(int index, ListNode l) {
+        if (index == 0) {
+            return l.item;
+        }
+        return getRecursivehelper(index - 1, l.next);
+    }
+
+    @Override
+    public void printDeque() {
+        ListNode temp = sentinel.next;
+        while (temp != sentinel) {
+            System.out.print(temp.item + " ");
+            temp = temp.next;
+        }
+    }
+}
