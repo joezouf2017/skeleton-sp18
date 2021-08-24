@@ -16,7 +16,7 @@ public class Palindrome {
                 worddeque.removeLast());
     }
 
-    public boolean palindromehelper(Deque<Character> word,
+    private boolean palindromehelper(Deque<Character> word,
                                     char first, char last) {
         if (first != last) {
             return false;
@@ -35,7 +35,7 @@ public class Palindrome {
                 worddeque.removeLast(), cc);
     }
 
-    public boolean offbyonehelper(Deque<Character> word, char first,
+    private boolean offbyonehelper(Deque<Character> word, char first,
                                   char last, CharacterComparator cc) {
         if (!cc.equalChars(first, last)) {
             return false;
