@@ -1,7 +1,7 @@
 package synthesizer;
 import java.util.Iterator;
 
-public interface BoundedQueue<T> extends Iterable<T>{
+public interface BoundedQueue<T> extends Iterable<T> {
     /** Returns the size of the buffer. */
     int capacity();
 
@@ -28,6 +28,5 @@ public interface BoundedQueue<T> extends Iterable<T>{
     }
 
     /** Returns an iterator of the buffer. */
-    @Override
     Iterator<T> iterator();
 }
