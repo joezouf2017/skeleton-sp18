@@ -24,21 +24,29 @@ public class Percolation {
     public void open(int row, int col) {
         validate(row, col);
         int n = xyTo1D(row, col);
-        if (map[n] >= 100) {
+        if (map[n] != 0) {
             return;
         }
+        map[n] = 100;
         if (row == 0) {
-            map[n] = 101;
-        } else if (row == side - 1) {
-            map[n] = 110;
-        } else {
-            map[n] = 100;
+            map[n] |= 101;
+        }
+        if (row == side - 1) {
+            map[n] |= 110;
         }
         opensites++;
-        for (int[] sites : near(row, col)) {
-            if (isOpen(sites[0], sites[1])) {
-                grid.union(xyTo1D(sites[0], sites[1]), n);
-                map[n] |= map[xyTo1D(sites[0], sites[1])];
+        int[] x = {1, -1, 0, 0};
+        int[] y = {0, 0, 1, -1};
+        for (int i = 0; i < 4; i++) {
+            int nearx = row + x[i];
+            int neary = col + y[i];
+            if (fair(nearx, neary)) {
+                int adjblock = xyTo1D(nearx, neary);
+                if (isOpen(nearx, neary)) {
+                    int root = grid.find(adjblock);
+                    map[n] |= map[root];
+                    grid.union(n, adjblock);
+                }
             }
         }
         int root = grid.find(n);
@@ -59,7 +67,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         validate(row, col);
         int n = grid.find(xyTo1D(row, col));
-        return map[n] == 101 | map[n] == 111;
+        return (map[n] & 101) == 101;
     }
 
     /* number of open sites */
@@ -76,32 +84,17 @@ public class Percolation {
         return r * side + c;
     }
 
+    private boolean fair(int row, int col) {
+        return !(row < 0 | row >= side | col < 0 | col >= side);
+    }
+
     private void validate(int row, int col) {
         if (row < 0 | row >= side | col < 0 | col >= side) {
             throw new IndexOutOfBoundsException();
         }
     }
 
-    private int[][] near(int row, int col) {
-        if (row == 0) {
-            if (col == 0) {
-                return new int[][]{{0, 1}, {1, 0}};
-            } else if (col == side - 1) {
-                return new int[][]{{0, col - 1}, {1, col}};
-            }
-            return new int[][]{{0, col - 1}, {1, col}, {0, col + 1}};
-        } else if (row == side - 1) {
-            if (col == 0) {
-                return new int[][]{{row - 1, col}, {row, col + 1}};
-            } else if (col == side - 1) {
-                return new int[][]{{row, col - 1}, {row - 1, col}};
-            }
-            return new int[][]{{row, col - 1}, {row - 1, col}, {row, col + 1}};
-        } else if (col == 0) {
-            return new int[][]{{row - 1, col}, {row, col + 1}, {row + 1, col}};
-        } else if (col == side - 1) {
-            return new int[][]{{row - 1, col}, {row, col - 1}, {row + 1, col}};
-        }
-        return new int[][]{{row, col - 1}, {row - 1, col}, {row + 1, col}, {row, col + 1}};
+    public static void main(String[] args) {
+
     }
 }
