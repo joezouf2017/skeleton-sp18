@@ -58,7 +58,6 @@ public class TestComplexOomage {
             params.add(six);
             params.add(seven);
             ComplexOomage deadly = new ComplexOomage(params);
-            System.out.println(deadly.hashCode());
             deadlyList.add(deadly);
         }
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
