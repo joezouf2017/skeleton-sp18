@@ -32,8 +32,8 @@ public class TestSimpleOomage {
                     SimpleOomage nextcopy = new SimpleOomage(i, j, k);
                     assertEquals(next.hashCode(), next.hashCode());
                     assertEquals(next.hashCode(), nextcopy.hashCode());
-                    assertFalse("hashCode " + next.hashCode() + " already exists, " +
-                            "i = " + i + ", j = " + j + ", k = " + k, set.contains(next.hashCode()));
+                    assertFalse("hashCode " + next.hashCode() + " already exists, " + "i = "
+                            + i + ", j = " + j + ", k = " + k, set.contains(next.hashCode()));
                     set.add(next.hashCode());
                     System.out.println(next.hashCode());
                     System.out.println("i " + i + " j " + j + " k " + k);

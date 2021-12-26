@@ -42,14 +42,24 @@ public class TestComplexOomage {
         List<Oomage> deadlyList = new ArrayList<>();
         int N = 10000;
         for (int i = 0; i < N; i++) {
-            int red = StdRandom.uniform(0, 51) * 5;
-            int green = StdRandom.uniform(0, 51) * 5;
-            int blue = StdRandom.uniform(0, 51) * 5;
+            int one = StdRandom.uniform(1, 255);
+            int two = 0;
+            int three = 0;
+            int four = 0;
+            int five = 0;
+            int six = 0;
+            int seven = 0;
             ArrayList<Integer> params = new ArrayList<>();
-            params.add(red);
-            params.add(green);
-            params.add(blue);
-            deadlyList.add(new ComplexOomage(params));
+            params.add(one);
+            params.add(two);
+            params.add(three);
+            params.add(four);
+            params.add(five);
+            params.add(six);
+            params.add(seven);
+            ComplexOomage deadly = new ComplexOomage(params);
+            System.out.println(deadly.hashCode());
+            deadlyList.add(deadly);
         }
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
     }
