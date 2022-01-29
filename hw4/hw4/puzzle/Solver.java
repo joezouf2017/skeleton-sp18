@@ -2,11 +2,12 @@ package hw4.puzzle;
 
 import edu.princeton.cs.algs4.MinPQ;
 import java.util.Comparator;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Solver {
-    private int moves;
-    private ArrayList<WorldState> solution;
+    private int moves = 0;
+    private LinkedList<WorldState> solution;
+    public int count = 0;
 
     private class SearchNode {
         private WorldState current;
@@ -23,8 +24,7 @@ public class Solver {
     private class SearchNodecomparator implements Comparator<SearchNode> {
         @Override
         public int compare(SearchNode A, SearchNode B) {
-            return A.current.estimatedDistanceToGoal() + A.move
-                    - B.current.estimatedDistanceToGoal() - B.move;
+            return A.current.estimatedDistanceToGoal() + A.move - B.current.estimatedDistanceToGoal() - B.move;
         }
     }
 
@@ -32,18 +32,22 @@ public class Solver {
         MinPQ<SearchNode> queue = new MinPQ<>(new SearchNodecomparator());
         queue.insert(new SearchNode(initial, 0, null));
         SearchNode result = queue.delMin();
-        moves = 0;
-        solution = new ArrayList<>(initial.estimatedDistanceToGoal());
-        solution.add(result.current);
+        solution = new LinkedList<>();
         while (!result.current.isGoal()) {
-            moves++;
             for (WorldState neighbor : result.current.neighbors()) {
-                if (!neighbor.equals(result.previous)) {
-                    queue.insert(new SearchNode(neighbor, moves, result));
+                count++;
+                if (result.previous == null) {
+                    queue.insert(new SearchNode(neighbor, result.move + 1, result));
+                } else if (!neighbor.equals(result.previous.current)) {
+                    queue.insert(new SearchNode(neighbor, result.move + 1, result));
                 }
             }
             result = queue.delMin();
-            solution.add(result.current);
+            moves = result.move;
+        }
+        while (result != null) {
+            solution.addFirst(result.current);
+            result = result.previous;
         }
     }
 
