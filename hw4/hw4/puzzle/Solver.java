@@ -7,24 +7,25 @@ import java.util.LinkedList;
 public class Solver {
     private int moves = 0;
     private LinkedList<WorldState> solution;
-    public int count = 0;
 
-    private class SearchNode {
+    class SearchNode {
         private WorldState current;
         private int move;
         private SearchNode previous;
+        private int distance;
 
         public SearchNode(WorldState cur, int m, SearchNode pre) {
             current = cur;
             move = m;
             previous = pre;
+            distance = cur.estimatedDistanceToGoal();
         }
     }
 
-    private class SearchNodecomparator implements Comparator<SearchNode> {
+    class SearchNodecomparator implements Comparator<SearchNode> {
         @Override
         public int compare(SearchNode A, SearchNode B) {
-            return A.current.estimatedDistanceToGoal() + A.move - B.current.estimatedDistanceToGoal() - B.move;
+            return A.distance + A.move - B.distance - B.move;
         }
     }
 
@@ -35,7 +36,6 @@ public class Solver {
         solution = new LinkedList<>();
         while (!result.current.isGoal()) {
             for (WorldState neighbor : result.current.neighbors()) {
-                count++;
                 if (result.previous == null) {
                     queue.insert(new SearchNode(neighbor, result.move + 1, result));
                 } else if (!neighbor.equals(result.previous.current)) {
