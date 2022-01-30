@@ -8,7 +8,7 @@ public class Solver {
     private int moves = 0;
     private LinkedList<WorldState> solution;
 
-    class SearchNode {
+    private class SearchNode {
         private WorldState current;
         private int move;
         private SearchNode previous;
@@ -22,7 +22,7 @@ public class Solver {
         }
     }
 
-    class SearchNodecomparator implements Comparator<SearchNode> {
+    private class SearchNodecomparator implements Comparator<SearchNode> {
         @Override
         public int compare(SearchNode A, SearchNode B) {
             return A.distance + A.move - B.distance - B.move;

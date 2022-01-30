@@ -76,7 +76,8 @@ public class Board implements WorldState {
                     continue;
                 }
                 if (tileAt(i, j) != i * size + j + 1) {
-                    count += Math.abs(i - (tile[i][j] - 1) / size) + Math.abs(j - (tile[i][j] - 1) % size);
+                    count += Math.abs(i - (tile[i][j] - 1) / size) +
+                            Math.abs(j - (tile[i][j] - 1) % size);
                 }
             }
         }
@@ -109,7 +110,7 @@ public class Board implements WorldState {
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
@@ -117,4 +118,10 @@ public class Board implements WorldState {
         return s.toString();
     }
 
+    @Override
+    public int hashCode() {
+        int result = tile == null ? 0 : tile.hashCode();
+        result = result * 31 + size;
+        return result;
+    }
 }
