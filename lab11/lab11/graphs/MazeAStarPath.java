@@ -1,5 +1,8 @@
 package lab11.graphs;
 
+import edu.princeton.cs.algs4.MinPQ;
+import java.util.Comparator;
+
 /**
  *  @author Josh Hug
  */
@@ -20,7 +23,7 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Estimate of the distance from v to the target. */
     private int h(int v) {
-        return -1;
+        return Math.abs(maze.toX(v) - maze.toX(t)) + Math.abs(maze.toY(v) - maze.toY(t));
     }
 
     /** Finds vertex estimated to be closest to target. */
@@ -29,9 +32,35 @@ public class MazeAStarPath extends MazeExplorer {
         /* You do not have to use this method. */
     }
 
+    private class Dcomparator implements Comparator<Integer> {
+        @Override
+        public int compare(Integer a, Integer b) {
+            return distTo[a] + h(a) - distTo[b] - h(b);
+        }
+    }
+
     /** Performs an A star search from vertex s. */
     private void astar(int s) {
-        // TODO
+        MinPQ<Integer> fringe = new MinPQ<>(new Dcomparator());
+        fringe.insert(s);
+        while (!targetFound) {
+            int cur = fringe.delMin();
+            marked[cur] = true;
+            announce();
+            for (int nbr: maze.adj(cur)) {
+                if (!marked[nbr] && distTo[nbr] != distTo[cur] - 1) {
+                    fringe.insert(nbr);
+                    distTo[nbr] = distTo[cur] + 1;
+                    edgeTo[nbr] = cur;
+                    announce();
+                    if (h(nbr) == 0) {
+                        marked[nbr] = true;
+                        announce();
+                        targetFound = true;
+                    }
+                }
+            }
+        }
     }
 
     @Override
