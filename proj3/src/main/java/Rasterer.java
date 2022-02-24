@@ -10,7 +10,6 @@ import java.util.Map;
 public class Rasterer {
 
     public Rasterer() {
-        // YOUR CODE HERE
     }
 
     /**
@@ -44,9 +43,123 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+        double ullon = params.get("ullon");
+        double ullat = params.get("ullat");
+        double lrlon = params.get("lrlon");
+        double lrlat = params.get("lrlat");
+        double w = params.get("w");
+        if (ullon > lrlon || ullat < lrlat || lrlon < MapServer.ROOT_ULLON
+                || ullon > MapServer.ROOT_LRLON || ullat < MapServer.ROOT_LRLAT
+                || lrlat > MapServer.ROOT_ULLAT) {
+            results.put("render_grid", new int[0][]);
+            results.put("query_success", false);
+            results.put("depth", 0);
+            results.put("raster_ul_lon", Integer.MAX_VALUE);
+            results.put("raster_ul_lat", Integer.MAX_VALUE);
+            results.put("raster_lr_lon", Integer.MAX_VALUE);
+            results.put("raster_lr_lat", Integer.MAX_VALUE);
+            return results;
+        }
+        double londpp = (lrlon - ullon) / w;
+        int depth = depth(londpp);
+        int x1 = xcoord(ullon, depth);
+        int x2 = xcoord(lrlon, depth);
+        int y1 = ycoord(ullat, depth);
+        int y2 = ycoord(lrlat, depth);
+        double rullon = lon(x1, depth, false);
+        double rullat = lat(y1, depth, false);
+        double rlrlon = lon(x2, depth, true);
+        double rlrlat = lat(y2, depth, true);
+        String[][] grid = new String[y2 - y1 + 1][x2 - x1 + 1];
+        for (int i = 0; i < y2 - y1 + 1; i++) {
+            for (int j = 0; j < x2 - x1 + 1; j++) {
+                grid[i][j] = "d" + depth + "_x" + (x1 + j) + "_y" + (y1 + i) + ".png";
+            }
+        }
+        results.put("render_grid", grid);
+        results.put("raster_ul_lon", rullon);
+        results.put("raster_ul_lat", rullat);
+        results.put("raster_lr_lon", rlrlon);
+        results.put("raster_lr_lat", rlrlat);
+        results.put("depth", depth);
+        results.put("query_success", true);
         return results;
     }
 
+    public static int depth(double londpp) {
+        double d0 = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / MapServer.TILE_SIZE;
+        int d = 0;
+        while (londpp < d0) {
+            d++;
+            d0 *= 0.5;
+            if (d == 7) {
+                break;
+            }
+        }
+        return d;
+    }
+
+    public static int xcoord(double lon, int depth) {
+        int n = (int) Math.pow(2, depth);
+        int result = 0;
+        double interval = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / n;
+        double start = MapServer.ROOT_ULLON;
+        if (lon < start) {
+            return result;
+        }
+        while (lon > start) {
+            start += interval;
+            result++;
+            if (result == n) {
+                break;
+            }
+        }
+        result--;
+        return result;
+    }
+
+    public static int ycoord(double lat, int depth) {
+        int n = (int) Math.pow(2, depth);
+        int result = 0;
+        double interval = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / n;
+        double start = MapServer.ROOT_ULLAT;
+        if (lat > start) {
+            return result;
+        }
+        while (lat < start) {
+            start -= interval;
+            result++;
+            if (result == n) {
+                break;
+            }
+        }
+        result--;
+        return result;
+    }
+
+    public static double lon(int x, int depth, boolean end) {
+        int n = (int) Math.pow(2, depth);
+        double interval = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / n;
+        double result = MapServer.ROOT_ULLON;
+        for (int i = 0; i < x; i++) {
+            result += interval;
+        }
+        if (end) {
+            result += interval;
+        }
+        return result;
+    }
+
+    public static double lat(int y, int depth, boolean end) {
+        int n = (int) Math.pow(2, depth);
+        double interval = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / n;
+        double result = MapServer.ROOT_ULLAT;
+        for (int i = 0; i < y; i++) {
+            result -= interval;
+        }
+        if (end) {
+            result -= interval;
+        }
+        return result;
+    }
 }
