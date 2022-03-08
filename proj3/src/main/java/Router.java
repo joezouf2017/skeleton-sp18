@@ -1,4 +1,10 @@
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +31,70 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        LinkedList<Long> path = new LinkedList<>();
+        long start = g.closest(stlon, stlat);
+        long dest = g.closest(destlon, destlat);
+        Set<Long> nodes = (Set<Long>) g.vertices();
+        if (!nodes.contains(dest) || !nodes.contains(start)) {
+            return new LinkedList<>();
+        }
+        Map<Long, Double> best = new HashMap<>();
+        Map<Long, Boolean> marked = new HashMap<>();
+        Map<Long, Long> pathTo = new HashMap<>();
+        boolean end = false;
+        best.put(start, (double) 0);
+        marked.put(start, false);
+        PriorityQueue<Long> fringe = new PriorityQueue<>(new DisComparator(g, dest, best));
+        fringe.add(start);
+        while (!end) {
+            long v = fringe.poll();
+            if (v == dest) {
+                end = true;
+            }
+            if (!marked.get(v)) {
+                marked.put(v, true);
+                for (long nbr : g.adjacent(v)) {
+                    if (best.get(nbr) == null) {
+                        best.put(nbr, best.get(v) + g.distance(nbr, v));
+                        marked.put(nbr, false);
+                        pathTo.put(nbr, v);
+                        fringe.add(nbr);
+                    } else {
+                        if (best.get(v) + g.distance(v, nbr) < best.get(nbr)) {
+                            best.put(nbr, best.get(v) + g.distance(v, nbr));
+                            marked.put(nbr, false);
+                            pathTo.put(nbr, v);
+                            fringe.add(nbr);
+                        }
+                    }
+                }
+            }
+        }
+        while (dest != start) {
+            path.addFirst(dest);
+            dest = pathTo.get(dest);
+        }
+        path.addFirst(dest);
+        return path;
+    }
+
+    public static class DisComparator implements Comparator<Long> {
+        private long d;
+        private GraphDB g;
+        private Map<Long, Double> dist;
+
+        @Override
+        public int compare(Long x, Long y) {
+            double distx = g.distance(x, d) + dist.get(x);
+            double disty = g.distance(y, d) + dist.get(y);
+            return Double.compare(distx, disty);
+        }
+
+        public DisComparator(GraphDB g, long d, Map<Long, Double> dist) {
+            this.g = g;
+            this.d = d;
+            this.dist = dist;
+        }
     }
 
     /**
