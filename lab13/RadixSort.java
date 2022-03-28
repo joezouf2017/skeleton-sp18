@@ -38,11 +38,15 @@ public class RadixSort {
     private static void sortHelperLSD(String[] asciis, int index) {
         String[] output = new String[asciis.length];
         int end = 0;
+        for (String s : asciis) {
+            if (s.length() <= index) {
+                output[end] = s;
+                end++;
+            }
+        }
         for (int i = 0; i < 256; i++) {
             for (String s : asciis) {
                 if (s.length() <= index) {
-                    output[end] = s;
-                    end++;
                     continue;
                 }
                 if (((int) s.charAt(index)) == i) {
