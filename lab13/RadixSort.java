@@ -69,6 +69,11 @@ public class RadixSort {
             radix[i] += radix[i - 1];
         }
         for (int i = asciis.length - 1; i >= 0; i--) {
+            if (asciis[i].length() <= index) {
+                output[radix[0]] = asciis[i];
+                radix[0]--;
+                continue;
+            }
             output[radix[asciis[i].charAt(index)]] = asciis[i];
             radix[asciis[i].charAt(index)]--;
         }
