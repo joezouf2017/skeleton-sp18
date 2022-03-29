@@ -56,7 +56,7 @@ public class RadixSort {
             }
         }
         System.arraycopy(output, 0, asciis, 0, asciis.length);**/
-        String[] output = new String[asciis.length];
+        /**String[] output = new String[asciis.length];
         int[] radix = new int[256];
         for (String s : asciis) {
             if (s.length() <= index) {
@@ -77,7 +77,35 @@ public class RadixSort {
             radix[asciis[i].charAt(index)]--;
             output[radix[asciis[i].charAt(index)]] = asciis[i];
         }
-        System.arraycopy(output, 0, asciis, 0, asciis.length);
+        System.arraycopy(output, 0, asciis, 0, asciis.length);**/
+        int[] counts = new int[256];
+        for (String s : asciis) {
+            if (s.length() - 1 < index) {
+                counts[0] += 1;
+            } else {
+                counts[s.charAt(index)] += 1;
+            }
+        }
+        int[] starts = new int[256];
+        int pos = 0;
+        for (int i = 0; i < starts.length; i += 1) {
+            starts[i] = pos;
+            pos += counts[i];
+        }
+
+        String[] sorted = new String[asciis.length];
+        for (String s : asciis) {
+            int place;
+            if (s.length() - 1 < index) {
+                place = starts[0];
+                starts[0] += 1;
+            } else {
+                place = starts[s.charAt(index)];
+                starts[s.charAt(index)] += 1;
+            }
+            sorted[place] = s;
+        }
+        System.arraycopy(sorted, 0, asciis, 0, asciis.length);
     }
 
     /**
@@ -94,4 +122,12 @@ public class RadixSort {
         // Optional MSD helper method for optional MSD radix sort
         return;
     }
+
+    /**public static void main(String[] args) {
+        String[] asciis = new String[]{"200", "As we can see", "1", "ACB", "whaj", "#%^&*)", "5&*7jkdjh"};
+        String[] sorted = sort(asciis);
+        for (String s : sorted) {
+            System.out.println(s);
+        }
+    }**/
 }
