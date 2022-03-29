@@ -36,7 +36,7 @@ public class RadixSort {
      * @param index The position to sort the Strings on.
      */
     private static void sortHelperLSD(String[] asciis, int index) {
-        String[] output = new String[asciis.length];
+        /**String[] output = new String[asciis.length];
         int end = 0;
         for (String s : asciis) {
             if (s.length() <= index) {
@@ -54,6 +54,23 @@ public class RadixSort {
                     end++;
                 }
             }
+        }
+        System.arraycopy(output, 0, asciis, 0, asciis.length);**/
+        String[] output = new String[asciis.length];
+        int[] radix = new int[256];
+        for (String s : asciis) {
+            if (s.length() <= index) {
+                radix[0]++;
+                continue;
+            }
+            radix[s.charAt(index)]++;
+        }
+        for (int i = 1; i < radix.length; i++) {
+            radix[i] += radix[i - 1];
+        }
+        for (int i = asciis.length - 1; i >= 0; i--) {
+            output[radix[asciis[i].charAt(index)]] = asciis[i];
+            radix[asciis[i].charAt(index)]--;
         }
         System.arraycopy(output, 0, asciis, 0, asciis.length);
     }
