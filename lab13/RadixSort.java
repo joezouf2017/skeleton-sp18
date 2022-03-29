@@ -70,12 +70,12 @@ public class RadixSort {
         }
         for (int i = asciis.length - 1; i >= 0; i--) {
             if (asciis[i].length() <= index) {
-                output[radix[0]] = asciis[i];
                 radix[0]--;
+                output[radix[0]] = asciis[i];
                 continue;
             }
-            output[radix[asciis[i].charAt(index)]] = asciis[i];
             radix[asciis[i].charAt(index)]--;
+            output[radix[asciis[i].charAt(index)]] = asciis[i];
         }
         System.arraycopy(output, 0, asciis, 0, asciis.length);
     }
