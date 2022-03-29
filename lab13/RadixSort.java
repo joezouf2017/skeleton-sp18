@@ -16,7 +16,7 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        int max = Integer.MIN_VALUE;
+        /**int max = Integer.MIN_VALUE;
         for (String s : asciis) {
             if (s.length() > max) {
                 max = s.length();
@@ -26,7 +26,17 @@ public class RadixSort {
         for (int i = max - 1; i >= 0; i--) {
             sortHelperLSD(output, i);
         }
-        return output;
+        return output;**/
+        int maxLength = Integer.MIN_VALUE;
+        for (String s : asciis) {
+            maxLength = maxLength > s.length() ? maxLength : s.length();
+        }
+        String[] sorted = new String[asciis.length];
+        System.arraycopy(asciis, 0, sorted, 0, asciis.length);
+        for (int d = maxLength - 1; d >= 0; d -= 1) {
+            sorted = sortHelperLSD(sorted, d);
+        }
+        return sorted;
     }
 
     /**
@@ -35,7 +45,7 @@ public class RadixSort {
      * @param asciis Input array of Strings
      * @param index The position to sort the Strings on.
      */
-    private static void sortHelperLSD(String[] asciis, int index) {
+    private static String[] sortHelperLSD(String[] asciis, int index) {
         /**String[] output = new String[asciis.length];
         int end = 0;
         for (String s : asciis) {
@@ -105,7 +115,7 @@ public class RadixSort {
             }
             sorted[place] = s;
         }
-        System.arraycopy(sorted, 0, asciis, 0, asciis.length);
+        return sorted;
     }
 
     /**
