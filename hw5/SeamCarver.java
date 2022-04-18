@@ -24,7 +24,7 @@ public class SeamCarver {
     }
 
     public double energy(int x, int y) {
-        if (x < 0 || x >= picture.width() || y < 0 || y >= picture().height()) {
+        if (x < 0 || x >= picture.width() || y < 0 || y >= picture.height()) {
             throw new IndexOutOfBoundsException();
         }
         return energy[y][x];
