@@ -12,7 +12,7 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        return picture;
+        return new Picture(picture);
     }
 
     public int width() {
@@ -50,6 +50,9 @@ public class SeamCarver {
 
     public int[] findVerticalSeam() {
         double[][] minimum = new double[picture.height()][picture.width()];
+        if (minimum[0].length == 1) {
+            return new int[minimum.length];
+        }
         for (int j = 0; j < picture.height(); j++) {
             for (int i = 0; i < picture.width(); i++) {
                 minimum[j][i] = M(i, j, minimum);
@@ -66,7 +69,7 @@ public class SeamCarver {
         return seam(minimum, start);
     }
 
-    public double M(int x, int y, double[][] minimum) {
+    private double M(int x, int y, double[][] minimum) {
         if (y == 0) {
             return energy[y][x];
         }
@@ -83,11 +86,11 @@ public class SeamCarver {
         return m + energy[y][x];
     }
 
-    public int[] seam(double[][] minimum, int start) {
+    private int[] seam(double[][] minimum, int start) {
         LinkedList<Integer> path = new LinkedList<>();
         path.addFirst(start);
         double m = minimum[minimum.length - 1][start];
-        System.out.println(m);
+        //System.out.println(m);
         m -= energy[minimum.length - 1][start];
         for (int j = minimum.length - 2; j > -1; j--) {
             for (int i = start - 1; i < start + 2; i++) {
@@ -98,26 +101,26 @@ public class SeamCarver {
                     path.addFirst(i);
                     start = i;
                     m -= energy[j][i];
-                    System.out.println("index is" + start);
+                    //System.out.println("index is" + start);
                     break;
                 }
             }
         }
         int[] output = new int[minimum.length];
         for (int i = 0; i < output.length; i++) {
-            System.out.println("done" + i);
+            //System.out.println("done" + i);
             output[i] = path.removeFirst();
         }
         return output;
     }
 
-    public void setEnergy(Picture picture) {
-        for (int i = 0; i < picture.width(); i++) {
-            for (int j = 0; j < picture.height(); j++) {
-                Color x1 = picture.get((i + 1 + picture.width()) % picture.width(), j);
-                Color x2 = picture.get((i - 1 + picture.width()) % picture.width(), j);
-                Color y1 = picture.get(i, (j + 1 + picture.height()) % picture.height());
-                Color y2 = picture.get(i, (j - 1 + picture.height()) % picture.height());
+    private void setEnergy(Picture p) {
+        for (int i = 0; i < p.width(); i++) {
+            for (int j = 0; j < p.height(); j++) {
+                Color x1 = p.get((i + 1 + p.width()) % p.width(), j);
+                Color x2 = p.get((i - 1 + p.width()) % p.width(), j);
+                Color y1 = p.get(i, (j + 1 + p.height()) % p.height());
+                Color y2 = p.get(i, (j - 1 + p.height()) % p.height());
                 int r1 = x1.getRed();
                 int r2 = x2.getRed();
                 int r3 = y1.getRed();
