@@ -6,7 +6,7 @@ public class SeamCarver {
     private double[][] energy;
 
     public SeamCarver(Picture picture) {
-        this.picture = picture;
+        this.picture = new Picture(picture);
         energy = new double[picture.height()][picture.width()];
         setEnergy(picture);
     }
@@ -90,7 +90,6 @@ public class SeamCarver {
         LinkedList<Integer> path = new LinkedList<>();
         path.addFirst(start);
         double m = minimum[minimum.length - 1][start];
-        //System.out.println(m);
         m -= energy[minimum.length - 1][start];
         for (int j = minimum.length - 2; j > -1; j--) {
             for (int i = start - 1; i < start + 2; i++) {
@@ -101,14 +100,12 @@ public class SeamCarver {
                     path.addFirst(i);
                     start = i;
                     m -= energy[j][i];
-                    //System.out.println("index is" + start);
                     break;
                 }
             }
         }
         int[] output = new int[minimum.length];
         for (int i = 0; i < output.length; i++) {
-            //System.out.println("done" + i);
             output[i] = path.removeFirst();
         }
         return output;
@@ -165,36 +162,4 @@ public class SeamCarver {
         picture = SeamRemover.removeVerticalSeam(picture, seam);
         setEnergy(picture);
     }
-
-    /**public static void main(String[] args) {
-        Picture p = new Picture("images/6x5.png");
-        SeamCarver sc = new SeamCarver(p);
-        for (int j = 0; j < p.height(); j++) {
-            for (int i = 0; i < p.width(); i++) {
-                System.out.print(sc.energy[j][i] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        double[][] minimum = new double[p.height()][p.width()];
-        for (int j = 0; j < p.height(); j++) {
-            for (int i = 0; i < p.width(); i++) {
-                minimum[j][i] = sc.M(i, j, minimum);
-            }
-        }
-        for (double[] a : minimum) {
-            for (double b : a) {
-                System.out.print(b + " ");
-            }
-            System.out.println();
-        }
-        int[] seam = sc.seam(minimum, 2);
-        for (int i : seam) {
-            System.out.print(i + " ");
-        }
-        int[] s2 = sc.findHorizontalSeam();
-        for (int i : s2) {
-            System.out.print(i + " ");
-        }
-    }**/
 }
